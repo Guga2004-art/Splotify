@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="shortcut icon" href="./images/LogoPurple.jpg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splotfy</title>
+</head>
+<body>
+    <nav class="NavBar">
+        <img src="./icons/search.png" class="SearchImg" alt="">
+        <input type="text" class="search" disabled placeholder="Don't work right now">
+        <div class="profile">
+            <img src="./icons/profile-avatar.png" id="profilePicture" alt="">
+        </div>
+    </nav>
+    <div class="sideItens">
+        <img src="./images/LogoPurple.jpg" class="logo" alt="">
+        <div class="navegation">
+            <h1 class="btn" id="bt1">Begin</h1>
+            <h1 class="btn" id="bt2" disabled>Search</h1>
+           <a href="./paginas/library.html"><h1 class="btn" id="bt3" disabled>Library</h1></a>
+        </div>
+
+        <div class="addMusic">
+            <h1 class="btn" id="bt4">Create playlist</h1>
+            <h1 class="btn" id="bt5">Add music</h1>
+        </div>
+
+        <div class="musics">
+            <h2 class="btn" id="templateMusic1">template</h2>
+
+            <img src="./icons/add.png" class="btn" id="addBtn" alt="addBtn">
+        </div>
+        
+    </div>
+    <div class="templateBlock">
+        <img class="close" src="./icons/cross.png" alt="">
+
+        <h1 id="TemplateName">lorem episum</h1>
+        <p>Name:</p>
+        <button class="btnAdd">Open Directory</button>
+        <br>
+        <button id="upBtn" class="btnAdd">Upload Song</button>
+    </div>
+    
+        <div class="Player">
+        <!--Musica nome,aleatorio, 
+        centralizado back, pause, next,
+         timer, close button -->
+         <h4 class="MusicName">Lorem Music Name</h4>
+            <div class="contentPlayer">
+            <img src="./icons/arrow-left.png" alt="" class="btnBack">
+            <img src="./icons/play.png" alt="" class="btnPause">
+            <img src="./icons/arrow-right.png" alt="" class="btnNext">
+        </div>
+
+        <div class="RandomContent">
+         <img src="./icons/dice.png" alt="" class="RandomBtn">
+        </div>
+        </div>
+        
+    <!--cartas de musicas padrâo, possivel copiar e colar para futuros cards-->
+        <div class="boxCard">
+
+            <div class="cardsTemplate">
+        <div class="cardName">
+            <h2 class="tittleCard">Card Tittle</h2>
+        </div>
+        
+        <div class="imgBlock">
+            <img src="" alt="" class="cardImg">
+        </div>
+
+        <div class="sinopseBox">
+            <h4 class="sinopse">Sinopse padrão</h4>
+        </div>
+            </div>
+
+            <div class="cardsTemplate">
+        <div class="cardName">
+            <h2 class="tittleCard">Card Tittle2</h2>
+        </div>
+        
+        <div class="imgBlock">
+            <img src="" alt="" class="cardImg">
+        </div>
+        <div class="sinopseBox">
+            <h4 class="sinopse">Sinopse padrão</h4>
+        </div>
+            </div>
+
+            <div class="cardsTemplate">
+        <div class="cardName">
+            <h2 class="tittleCard">Card Tittle3</h2>
+        </div>
+        
+        <div class="imgBlock">
+            <img src="" alt="" class="cardImg">
+        </div>
+
+        <div class="sinopseBox">
+            <h4 class="sinopse">Sinopse padrão</h4>
+        </div>
+            </div>
+
+        </div>
+
+     <canvas id="c" style="display: block;"></canvas>
+<script src="./JsScript.js"></script>
+</body>
+</html>
