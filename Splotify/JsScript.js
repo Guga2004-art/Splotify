@@ -8,6 +8,9 @@ let c = document.getElementById("c");
 let ctx = c.getContext("2d");
 const btn = document.getElementById("btn")
 const pauseBtn = document.querySelector('.btnPause')
+let musicMap = new Map()
+let currentAudio = null
+let isPlaying = false
 
 addMusic.onclick = function () {
     cards.style.display = "none"
@@ -109,7 +112,7 @@ musicInput.addEventListener('change', function() {
         musicsDiv.appendChild(h2); // Adiciona o elemento à div
             musicMap.set(h2, file);
 
-        // Add click event to each music item
+        // adiciona click em cada item de musica
         h2.addEventListener('click', function() {
             if (currentAudio) {
                 currentAudio.pause();
@@ -120,7 +123,7 @@ musicInput.addEventListener('change', function() {
             currentAudio.play();
             isPlaying = true;
             document.querySelector('.MusicName').textContent = file.name;
-            // Update pause button image to "pause" state
+            // atualiza o botão de pausa
             pauseBtn.src = './icons/pause.png';
         });
     }
@@ -138,4 +141,18 @@ pauseBtn.addEventListener('click', function() {
             pauseBtn.src = './icons/pause.png';
         }
     }
+});
+
+// Evento de clique do <h2> alterado (substitua o existente)
+h2.addEventListener('click', function() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+        isPlaying = false;
+    }
+    currentAudio = new Audio(URL.createObjectURL(file));
+    currentAudio.play();
+    isPlaying = true;
+    document.querySelector('.MusicName').textContent = file.name;
+    // pauseBtn.src = './icons/pause.png'; // Linha comentada para ignorar troca de ícones
 });
