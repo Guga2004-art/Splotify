@@ -11,6 +11,12 @@ const pauseBtn = document.querySelector('.btnPause')
 let musicMap = new Map()
 let currentAudio = null
 let isPlaying = false
+const songName = document.getElementById("nameBlock")
+const createPlaylist = document.getElementById("bt4")
+
+createPlaylist.addEventListener("click", function () {
+    
+})
 
 addMusic.onclick = function () {
     cards.style.display = "none"
@@ -111,7 +117,7 @@ musicInput.addEventListener('change', function() {
         h2.classList.add('btn'); // Adiciona uma classe para estilização, se necessário
         musicsDiv.appendChild(h2); // Adiciona o elemento à div
             musicMap.set(h2, file);
-
+        songName.textContent = file.name
         // adiciona click em cada item de musica
         h2.addEventListener('click', function() {
             if (currentAudio) {
