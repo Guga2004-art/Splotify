@@ -48,7 +48,6 @@ body {
     background-color: rgb(0, 0, 0);
     height: 101%;
     width: 15%;
-    max-width: 15%;
     z-index: 1; /* Garante que a sidebar fique acima do canvas */
 }
 
@@ -225,22 +224,92 @@ box-shadow: 0px 0px 40px 20px rgb(38, 6, 151) !important;
     z-index: 1;
 }
 
+@media (max-width:1300px) {
+    .navegation {
+      margin-top: 130px;
+    }
+    body {
+      background-color: rgb(0, 0, 0);
+    }
+}
 /* Media query para ajustar o player quando os cards quebram linha */
 @media (max-width: 1024px) {
     .Player {
-        top: 1000px; /* Aumenta a posição para evitar sobreposição com os cards */
+        top: 1100px; /* Aumenta a posição para evitar sobreposição com os cards */
+    }
+    .cardsTemplate {
+        top: 80px;
+        margin: 15px;
+        left: 30px;
+    }
+    .sideItens {
+      margin-top: 50px;
+      left: 0;
+      width: 20%;   
+    }
+    .navegation {
+      margin-top: 100px;
+    }
+    .search {
+      display: none;
+    }
+    body {
+      background-color: rgb(0, 0, 0);
+    }
+    .templateBlock {
+      left: 350px;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 868px) {
     .Player {
-        top: 1100px; /* Ajuste adicional para telas ainda menores */
+        top: 620px; /* Ajuste adicional para telas ainda menores */
+    }
+    .cardsTemplate {
+        top: 10px;
+        margin: 15px;
+        left: 40px;
+    }
+    #card2 {
+      display: none;
+    }
+    #card3 {
+      display: none;
+    }
+    .navegation {
+      margin-top: 130px;
+      margin-left: -20px;
+    }
+    .addMusic {
+      margin-left: -20px;
+    }
+    .musics {
+      margin-left: -20px;
+    }
+    .logo {
+      margin-left: 10px;
+    }
+    .sideItens {
+      margin-top: 0px;
+      width: 25%;      
+    }
+    body {
+      background-color: rgb(0, 0, 0);
+    }
+    .SearchImg {
+      display: none;
+    }
+    .templateBlock {
+      left: 60px;
     }
 }
 
-@media (max-width: 580px) {
+@media (max-width: 695px) {
     .Player {
-        top: 1500px; /* Posição ainda mais baixa para telas muito pequenas */
+        top: 620px; /* Posição ainda mais baixa para telas muito pequenas */
+    }
+    .sideItens {
+        width: 30%;
     }
 }
 .contentPlayer {
