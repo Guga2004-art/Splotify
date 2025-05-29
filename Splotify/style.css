@@ -266,7 +266,7 @@ box-shadow: 0px 0px 40px 20px rgb(38, 6, 151) !important;
         top: 620px; /* Ajuste adicional para telas ainda menores */
     }
     .cardsTemplate {
-        top: 10px;
+        top: 60px;
         margin: 15px;
         left: 40px;
     }
