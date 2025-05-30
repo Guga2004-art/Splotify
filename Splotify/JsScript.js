@@ -11,6 +11,7 @@ const pauseBtn = document.querySelector('.btnPause')
 let musicMap = new Map()
 let currentAudio = null
 let isPlaying = false
+let currentPlayingH2 = null; // Variável para rastrear o H2 atual
 const songName = document.getElementById("nameBlock")
 const createPlaylist = document.getElementById("bt4")
 const profilePicture = document.getElementById("profilePicture")
@@ -278,17 +279,19 @@ musicInput.addEventListener('change', function() {
         h2.classList.add('btn'); // Adiciona uma classe para estilização, se necessário
         musicsDiv.appendChild(h2); // Adiciona o elemento à div
         musicMap.set(h2, file);
-        songName.textContent = file.name
+        // songName.textContent = file.name // Removido: Isso atualizaria o nome para a última música adicionada, não a que está tocando
+        
         // adiciona click em cada item de musica
         h2.addEventListener('click', function() {
             if (currentAudio) {
                 currentAudio.pause();
-                currentAudio = null;
+                // currentAudio = null; // Não precisa zerar se vamos substituir logo em seguida
                 isPlaying = false;
             }
             currentAudio = new Audio(URL.createObjectURL(file));
             currentAudio.play();
             isPlaying = true;
+            currentPlayingH2 = this; // Atualiza o H2 que está tocando
             document.querySelector('.MusicName').textContent = file.name;
             // atualiza o botão de pausa
             pauseBtn.src = './icons/pause.png';
@@ -310,16 +313,64 @@ pauseBtn.addEventListener('click', function() {
     }
 });
 
-// Evento de clique do <h2> alterado (substitua o existente)
-h2.addEventListener('click', function() {
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-        isPlaying = false;
-    }
-    currentAudio = new Audio(URL.createObjectURL(file));
-    currentAudio.play();
-    isPlaying = true;
-    document.querySelector('.MusicName').textContent = file.name;
-    // pauseBtn.src = './icons/pause.png'; // Linha comentada para ignorar troca de ícones
-});
+
+const btnNext = document.querySelector('.btnNext'); 
+
+if (btnNext) { 
+    btnNext.addEventListener('click', function() {
+        if (!currentPlayingH2) { 
+            const firstSongElement = document.querySelector('.musics .btn');
+            if (firstSongElement) {
+                firstSongElement.click();
+            }
+            return;
+        }
+
+        const songElements = Array.from(document.querySelectorAll('.musics .btn')); 
+        if (songElements.length === 0) return; 
+
+        let currentIndex = songElements.indexOf(currentPlayingH2);
+
+        if (currentIndex === -1) { 
+            if (songElements.length > 0) {
+                songElements[0].click();
+            }
+            return;
+        }
+
+        let nextIndex = (currentIndex + 1) % songElements.length; 
+        songElements[nextIndex].click(); 
+    });
+}
+
+const btnBack = document.querySelector('.btnBack'); // Seleciona o botão/imagem btnBack
+
+if (btnBack) { // Verifica se o elemento existe antes de adicionar o listener
+    btnBack.addEventListener('click', function() {
+        if (!currentPlayingH2) { // Se nenhuma música estiver tocando
+            // Opcional: tocar a última música da lista se existir
+            const songElements = Array.from(document.querySelectorAll('.musics .btn'));
+            if (songElements.length > 0) {
+                songElements[songElements.length - 1].click(); // Clica na última música
+            }
+            return;
+        }
+
+        const songElements = Array.from(document.querySelectorAll('.musics .btn')); // Pega todos os H2 de música
+        if (songElements.length === 0) return; // Nenhuma música na lista
+
+        let currentIndex = songElements.indexOf(currentPlayingH2);
+
+        if (currentIndex === -1) { // Caso algo dê errado e não encontre o H2 atual
+             // Toca a última música como fallback
+            if (songElements.length > 0) {
+                songElements[songElements.length - 1].click();
+            }
+            return;
+        }
+
+        // Calcula o índice anterior, com loop para o final se for a primeira
+        let prevIndex = (currentIndex - 1 + songElements.length) % songElements.length; 
+        songElements[prevIndex].click(); // Simula o clique no H2 anterior para tocar a música
+    });
+}
