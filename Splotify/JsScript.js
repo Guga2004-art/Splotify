@@ -1,3 +1,4 @@
+//Gustavo Cândido Projeto: Splotify
 const addMusic = document.getElementById("bt5")
 const templateBlock = document.querySelector('.templateBlock')
 let inside = false
@@ -12,7 +13,7 @@ let musicMap = new Map()
 let currentAudio = null
 let isPlaying = false
 let currentPlayingH2 = null; // Variável para rastrear o H2 atual
-const songName = document.getElementById("nameBlock")
+const songName = document.getElementById("nameBlock") // Esta variável não está sendo usada no código original para o nome da música atual.
 const createPlaylist = document.getElementById("bt4")
 const profilePicture = document.getElementById("profilePicture")
 const configBlock = document.querySelector('.configBlock')
@@ -25,7 +26,7 @@ const navBar = document.querySelector('.NavBar')
 const logo = document.querySelector('.logo')
 const contentPlayer = document.querySelector('.contentPlayer')
 const randomContent = document.querySelector('.RandomContent')
-const musicName = document.querySelector('.MusicName')
+const musicNameDisplay = document.querySelector('.MusicName') // Renomeado para evitar conflito com a variável musicName usada no CSS
 const cardsTemplate = document.querySelectorAll('.cardsTemplate')
 const tittleCard = document.querySelectorAll('.tittleCard');
 const sinopse = document.querySelectorAll('.sinopseBox');
@@ -33,6 +34,7 @@ const cardImg = document.querySelectorAll('.imgBlock')
 const btnAdd = document.querySelectorAll('.btnAdd')
 const addBtn = document.getElementById('addBtn')
 const purpleBtnElement = document.querySelector('#purpleBtn')
+const sideItens = document.querySelector('.sideItens') // Adicionado de volta de codigo1
 
 // Variável global para a cor do efeito Matrix (padrão: roxo)
 let matrixColor = "rgb(72, 50, 155)";
@@ -41,7 +43,7 @@ let matrixColor = "rgb(72, 50, 155)";
 function updateTemplateBlockHover(color) {
     // Remove qualquer regra de hover anterior
     templateBlock.classList.remove('hover-green', 'hover-red', 'hover-purple');
-    // Adiciona a classe correspondente à cor
+    // Adiciona a classe correspondente à cor (Sintaxe corrigida)
     templateBlock.classList.add(`hover-${color}`);
 }
 
@@ -50,6 +52,7 @@ function updateBtnHover(color) {
     const btns = document.querySelectorAll('.btn');
     btns.forEach(btn => {
         btn.classList.remove('btn-hover-green', 'btn-hover-red', 'btn-hover-purple');
+        // Adiciona a classe correspondente à cor (Sintaxe corrigida)
         btn.classList.add(`btn-hover-${color}`);
     });
 }
@@ -92,7 +95,7 @@ greenBtn.addEventListener("click", function() {
     contentPlayer.style.border = "solid 2px green"
     logo.style.border = "solid 2px green"
     randomContent.style.border = "solid 2px green"
-    musicName.style.border = "solid 2px green"
+    musicNameDisplay.style.border = "solid 2px green" // Use musicNameDisplay
     cardsTemplate.forEach(card => card.style.border = "solid 2px green")
     tittleCard.forEach(card => { card.style.border = "solid 2px green"; card.style.backgroundColor = "rgba(0, 128, 0, 0.7)"; })
     sinopse.forEach(card => card.style.border = "solid 2px green")
@@ -104,7 +107,7 @@ greenBtn.addEventListener("click", function() {
     templateBlock.style.boxShadow = "0px 0px 50px 2px green"
     contentPlayer.style.boxShadow = "0px 0px 70px 10px green"
     randomContent.style.boxShadow = "-15px -10px 50px 2px green"
-    musicName.style.boxShadow = "-15px -10px 50px 2px green"
+    musicNameDisplay.style.boxShadow = "-15px -10px 50px 2px green" // Use musicNameDisplay
     cardsTemplate.forEach(card => card.style.boxShadow = "0px 6px 50px 2px green")
     tittleCard.forEach(card => card.style.boxShadow = "-15px -10px 50px 2px green")
     sinopse.forEach(card => card.style.boxShadow = "5px 0px 30px 6px green")
@@ -120,7 +123,7 @@ redBtn.addEventListener("click", function() {
     contentPlayer.style.border = "solid 2px red"
     logo.style.border = "solid 2px red"
     randomContent.style.border = "solid 2px red"
-    musicName.style.border = "solid 2px red"
+    musicNameDisplay.style.border = "solid 2px red" // Use musicNameDisplay
     cardsTemplate.forEach(card => card.style.border = "solid 2px red")
     tittleCard.forEach(card => { card.style.border = "solid 2px red"; card.style.backgroundColor = "rgba(128, 0, 0, 0.7)"; })
     sinopse.forEach(card => card.style.border = "solid 2px red")
@@ -132,7 +135,7 @@ redBtn.addEventListener("click", function() {
     templateBlock.style.boxShadow = "0px 0px 50px 2px red"
     contentPlayer.style.boxShadow = "0px 0px 70px 10px red"
     randomContent.style.boxShadow = "-15px -10px 50px 2px red"
-    musicName.style.boxShadow = "-15px -10px 50px 2px red"
+    musicNameDisplay.style.boxShadow = "-15px -10px 50px 2px red" // Use musicNameDisplay
     cardsTemplate.forEach(card => card.style.boxShadow = "0px 6px 50px 2px red")
     tittleCard.forEach(card => card.style.boxShadow = "-15px -10px 50px 2px red")
     sinopse.forEach(card => card.style.boxShadow = "5px 0px 30px 6px red")
@@ -148,7 +151,7 @@ purpleBtn.addEventListener("click", function() {
     contentPlayer.style.border = "solid 2px rgb(38, 6, 151)"
     logo.style.border = "solid 2px rgb(38, 6, 151)"
     randomContent.style.border = "solid 2px rgb(38, 6, 151)"
-    musicName.style.border = "solid 2px rgb(38, 6, 151)"
+    musicNameDisplay.style.border = "solid 2px rgb(38, 6, 151)" // Use musicNameDisplay
     cardsTemplate.forEach(card => card.style.border = "solid 2px rgb(38, 6, 151)")
     tittleCard.forEach(card => { card.style.border = "solid 2px rgb(38, 6, 151)"; card.style.backgroundColor = "rgb(92, 35, 138)"; })
     sinopse.forEach(card => card.style.border = "solid 2px rgb(38, 6, 151)")
@@ -161,7 +164,7 @@ purpleBtn.addEventListener("click", function() {
     templateBlock.style.boxShadow = "0px 0px 50px 2px rgb(38, 6, 151)"
     contentPlayer.style.boxShadow = "0px 0px 70px 10px rgb(38, 6, 151)"
     randomContent.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)"
-    musicName.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)"
+    musicNameDisplay.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)" // Use musicNameDisplay
     cardsTemplate.forEach(card => card.style.boxShadow = "0px 6px 50px 2px rgb(38, 6, 151)")
     tittleCard.forEach(card => card.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)")
     sinopse.forEach(card => card.style.boxShadow = "5px 0px 30px 6px rgb(38, 6, 151)")
@@ -180,13 +183,16 @@ profilePicture.addEventListener("click", function (){
 })
 
 createPlaylist.addEventListener("click", function () {
-    
+    // Lógica para criar playlist, se houver
 })
 
 addMusic.onclick = function () {
     cards.style.display = "none"
     player.style.display = "none"
-    templateBlock.style.display = "grid"   
+    sideItens.style.display = "none" // Mantido de codigo1
+    navBar.style.display = "none" // Mantido de codigo1
+    templateBlock.style.display = "grid" 
+    configBlock.style.display = "none"
     if (!isDrawing) { // Only start if the animation isn't already running
         c.style.display = "block"; // Show the canvas
         setInterval(draw, 44); // Start the animation
@@ -251,6 +257,8 @@ closeBtn.addEventListener("click", function () {
     templateBlock.style.display = "none"
     player.style.display = "inline-flex"
     c.style.display = "none"
+    sideItens.style.display = "block" // Mantido de codigo1
+    navBar.style.display = "flex" // Mantido de codigo1
 })
 
 // Cria o input de arquivo programaticamente
@@ -269,6 +277,26 @@ uploadBtn.addEventListener('click', function() {
     musicInput.click();
 });
 
+// FUNÇÃO PARA TOCAR A PRÓXIMA MÚSICA (Adicionado de codigo2)
+function playNextSong() {
+    const songElements = Array.from(document.querySelectorAll('.musics .btn')); 
+    if (songElements.length === 0) return; // Nenhuma música na lista
+
+    let currentIndex = -1;
+    if (currentPlayingH2) {
+        currentIndex = songElements.indexOf(currentPlayingH2);
+    }
+    
+    let nextIndex;
+    if (currentIndex === -1) { // Se nenhuma música estiver tocando ou a atual não for encontrada
+        nextIndex = 0; // Começa da primeira música
+    } else {
+        nextIndex = (currentIndex + 1) % songElements.length; // Loop para a próxima, ou volta ao início
+    }
+    
+    songElements[nextIndex].click(); // Simula o clique na próxima música
+}
+
 // Lida com a seleção de arquivos
 musicInput.addEventListener('change', function() {
     const files = this.files;
@@ -279,22 +307,24 @@ musicInput.addEventListener('change', function() {
         h2.classList.add('btn'); // Adiciona uma classe para estilização, se necessário
         musicsDiv.appendChild(h2); // Adiciona o elemento à div
         musicMap.set(h2, file);
-        // songName.textContent = file.name // Removido: Isso atualizaria o nome para a última música adicionada, não a que está tocando
         
         // adiciona click em cada item de musica
         h2.addEventListener('click', function() {
             if (currentAudio) {
                 currentAudio.pause();
-                // currentAudio = null; // Não precisa zerar se vamos substituir logo em seguida
-                isPlaying = false;
+                // Remove o listener 'ended' da música anterior para evitar chamadas duplicadas (Adicionado de codigo2)
+                currentAudio.removeEventListener('ended', playNextSong); 
             }
             currentAudio = new Audio(URL.createObjectURL(file));
             currentAudio.play();
             isPlaying = true;
             currentPlayingH2 = this; // Atualiza o H2 que está tocando
-            document.querySelector('.MusicName').textContent = file.name;
+            musicNameDisplay.textContent = file.name; // Atualiza o nome da música no player (Mudado para musicNameDisplay)
             // atualiza o botão de pausa
             pauseBtn.src = './icons/pause.png';
+
+            // ADICIONA O EVENTO 'ENDED' AQUI (Adicionado de codigo2)
+            currentAudio.addEventListener('ended', playNextSong);
         });
     }
 });
@@ -317,30 +347,8 @@ pauseBtn.addEventListener('click', function() {
 const btnNext = document.querySelector('.btnNext'); 
 
 if (btnNext) { 
-    btnNext.addEventListener('click', function() {
-        if (!currentPlayingH2) { 
-            const firstSongElement = document.querySelector('.musics .btn');
-            if (firstSongElement) {
-                firstSongElement.click();
-            }
-            return;
-        }
-
-        const songElements = Array.from(document.querySelectorAll('.musics .btn')); 
-        if (songElements.length === 0) return; 
-
-        let currentIndex = songElements.indexOf(currentPlayingH2);
-
-        if (currentIndex === -1) { 
-            if (songElements.length > 0) {
-                songElements[0].click();
-            }
-            return;
-        }
-
-        let nextIndex = (currentIndex + 1) % songElements.length; 
-        songElements[nextIndex].click(); 
-    });
+    // Agora o btnNext chama a mesma função que o evento 'ended' (Alterado para usar playNextSong de codigo2)
+    btnNext.addEventListener('click', playNextSong);
 }
 
 const btnBack = document.querySelector('.btnBack'); // Seleciona o botão/imagem btnBack
@@ -348,7 +356,7 @@ const btnBack = document.querySelector('.btnBack'); // Seleciona o botão/imagem
 if (btnBack) { // Verifica se o elemento existe antes de adicionar o listener
     btnBack.addEventListener('click', function() {
         if (!currentPlayingH2) { // Se nenhuma música estiver tocando
-            // Opcional: tocar a última música da lista se existir
+            // Opcional: tocar a última música da lista se existir (Completo de codigo2)
             const songElements = Array.from(document.querySelectorAll('.musics .btn'));
             if (songElements.length > 0) {
                 songElements[songElements.length - 1].click(); // Clica na última música
