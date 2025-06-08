@@ -35,7 +35,7 @@ const btnAdd = document.querySelectorAll('.btnAdd')
 const addBtn = document.getElementById('addBtn')
 const purpleBtnElement = document.querySelector('#purpleBtn')
 const sideItens = document.querySelector('.sideItens') // Adicionado de volta de codigo1
-
+const MatrixOnly = document.getElementById("matrixOnly")
 // Variável global para a cor do efeito Matrix (padrão: roxo)
 let matrixColor = "rgb(72, 50, 155)";
 
@@ -176,10 +176,12 @@ purpleBtn.addEventListener("click", function() {
 
 closeConfig.addEventListener("click", function() {
     configBlock.style.display = "none"
+    cards.style.display = "flex"
 })
 
 profilePicture.addEventListener("click", function (){
     configBlock.style.display = "block"
+    cards.style.display = "none"
 })
 
 createPlaylist.addEventListener("click", function () {
@@ -200,7 +202,16 @@ addMusic.onclick = function () {
     }
     c.style.display = "block"
 }
-
+MatrixOnly.addEventListener("click", function() {
+        navBar.style.display =  "none"
+        cards.style.display = "none"
+        if (!isDrawing) { // Only start if the animation isn't already running
+        c.style.display = "block"; // Show the canvas
+        setInterval(draw, 44); // Start the animation
+        isDrawing = true; // Update the flag
+    }
+    c.style.display = "block"
+})
 // Making the canvas full screen
 c.height = window.innerHeight;
 c.width = window.innerWidth;
@@ -330,6 +341,9 @@ musicInput.addEventListener('change', function() {
 });
 
 pauseBtn.addEventListener('click', function() {
+        navBar.style.display =  "flex"
+        cards.style.display = "flex"
+        c.style.display = "none"
     if (currentAudio) {
         if (isPlaying) {
             currentAudio.pause();
