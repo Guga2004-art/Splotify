@@ -34,8 +34,15 @@ const cardImg = document.querySelectorAll('.imgBlock')
 const btnAdd = document.querySelectorAll('.btnAdd')
 const addBtn = document.getElementById('addBtn')
 const purpleBtnElement = document.querySelector('#purpleBtn')
-const sideItens = document.querySelector('.sideItens') // Adicionado de volta de codigo1
+const sideItens = document.querySelector('.sideItens') // Adicionado de codigo1
 const MatrixOnly = document.getElementById("matrixOnly")
+
+// Variáveis para os novos botões e elementos de imagem
+const changeLogoBtn = document.getElementById('changeLogoBtn');
+const changeProfileBtn = document.getElementById('changeProfileBtn');
+const logoImg = document.querySelector('.logo'); // Referência à imagem da logo
+const profilePictureImg = document.getElementById('profilePicture'); // Referência à imagem do perfil
+
 // Variável global para a cor do efeito Matrix (padrão: roxo)
 let matrixColor = "rgb(72, 50, 155)";
 
@@ -272,7 +279,7 @@ closeBtn.addEventListener("click", function () {
     navBar.style.display = "flex" // Mantido de codigo1
 })
 
-// Cria o input de arquivo programaticamente
+// Cria o input de arquivo programaticamente para músicas
 const musicInput = document.createElement('input');
 musicInput.type = 'file';
 musicInput.accept = '.mp3'; // Aceita apenas arquivos .mp3
@@ -308,7 +315,7 @@ function playNextSong() {
     songElements[nextIndex].click(); // Simula o clique na próxima música
 }
 
-// Lida com a seleção de arquivos
+// Lida com a seleção de arquivos de música
 musicInput.addEventListener('change', function() {
     const files = this.files;
     const musicsDiv = document.querySelector('.musics'); // Div onde as músicas aparecem
@@ -396,3 +403,54 @@ if (btnBack) { // Verifica se o elemento existe antes de adicionar o listener
         songElements[prevIndex].click(); // Simula o clique no H2 anterior para tocar a música
     });
 }
+
+
+// --- INÍCIO DO CÓDIGO PARA TROCA DE IMAGENS (LOGO E PERFIL) ---
+
+// Cria o input de arquivo programaticamente para a logo
+const logoInput = document.createElement('input');
+logoInput.type = 'file';
+logoInput.accept = 'image/*'; // Aceita apenas arquivos de imagem
+logoInput.style.display = 'none'; // Esconde o input
+document.body.appendChild(logoInput);
+
+// Cria o input de arquivo programaticamente para a foto de perfil
+const profilePictureInput = document.createElement('input');
+profilePictureInput.type = 'file';
+profilePictureInput.accept = 'image/*'; // Aceita apenas arquivos de imagem
+profilePictureInput.style.display = 'none'; // Esconde o input
+document.body.appendChild(profilePictureInput);
+
+// Adiciona listener para o botão "Change Logo"
+changeLogoBtn.addEventListener('click', function() {
+    logoInput.click(); // Aciona o input de arquivo da logo
+});
+
+// Lida com a seleção de arquivo para a logo
+logoInput.addEventListener('change', function() {
+    const file = this.files[0]; // Pega o primeiro arquivo selecionado
+    if (file) {
+        // Revoga o URL do objeto anterior para evitar vazamento de memória (opcional, mas boa prática)
+        if (logoImg.src && logoImg.src.startsWith('blob:')) {
+            URL.revokeObjectURL(logoImg.src);
+        }
+        logoImg.src = URL.createObjectURL(file); // Define a nova imagem da logo
+    }
+});
+
+// Adiciona listener para o botão "Change Profile"
+changeProfileBtn.addEventListener('click', function() {
+    profilePictureInput.click(); // Aciona o input de arquivo do perfil
+});
+
+// Lida com a seleção de arquivo para a foto de perfil
+profilePictureInput.addEventListener('change', function() {
+    const file = this.files[0]; // Pega o primeiro arquivo selecionado
+    if (file) {
+        // Revoga o URL do objeto anterior para evitar vazamento de memória
+        if (profilePictureImg.src && profilePictureImg.src.startsWith('blob:')) {
+            URL.revokeObjectURL(profilePictureImg.src);
+        }
+        profilePictureImg.src = URL.createObjectURL(file); // Define a nova imagem do perfil
+    }
+});
