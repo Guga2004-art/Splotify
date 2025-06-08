@@ -4,17 +4,32 @@
     <link rel="shortcut icon" href="../images/LogoPurple.jpg" type="image/x-icon">
     <link rel="stylesheet" href="./PgStyle.css">
     <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
 </head>
 <body>
         <nav class="NavBar">
         <img src="../icons/search.png" class="SearchImg" alt="">
-        <input type="text" class="search" disabled placeholder="Don't work right now">
         <div class="profile">
             <img src="../icons/profile-avatar.png" id="profilePicture" alt="">
         </div>
     </nav>
+
+
+      <div class="configBlock">
+        <div class="configItens">
+          <div id="colorOption">
+            <button type="block" class="colorBtn" id="redBtn">red</button>
+            <button type="block" class="colorBtn" id="greenBtn">green</button>
+            <button type="block" class="colorBtn" id="purpleBtn">purple</button>
+          </div>
+        </div>
+       <button type="block" class="btn" id="closeConfig">Close</button>
+      </div>
+
     <div class="sideItens">
         <img src="../images/LogoPurple.jpg" class="logo" alt="">
         <div class="navegation">
@@ -25,15 +40,16 @@
 
         <div class="addMusic">
             <h1 class="btn" id="bt4">Create playlist</h1>
-            <h1 class="btn" id="bt5">Add music</h1>
-        </div>
-
-        <div class="musics">
-            <h2 class="btn" id="templateMusic1">template</h2>
-        </div>
-        
-    </div>
+        </div>  
+    </div> 
      <canvas id="c" style="display: block;"></canvas>
+        <div class="bloco1">
+        <div class="list" id="list1">1</div>
+        <div class="list" id="list2">2</div>
+        <div class="list">3</div>
+        <div class="list">4</div>
+        <div class="list">5</div>
+    </div>
     <script src="./PgScript.js"></script>
 </body>
 </html>
