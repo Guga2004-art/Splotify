@@ -1,0 +1,157 @@
+body {
+    background-color: rgb(8, 8, 8);
+    position: relative;
+    color: rgb(200, 221, 241);
+    font-family: "Pixelify Sans", sans-serif;
+    margin: 0; /* Adicionado para evitar margens indesejadas */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+.boxLogin {
+    margin-top: 20px;
+    display: grid;
+    justify-content: center;
+    background-color: rgb(0, 0, 0);
+    width: 45%;
+    height: 550px;
+    border-radius: 10px;
+    border: solid 3px rgb(65, 6, 151);
+    box-shadow: 0px 0px 40px 6px rgb(65, 6, 151);
+    animation: boxLogin 5.5s infinite;
+}
+@keyframes boxLogin {
+0% {
+    margin-top: 25px;
+}
+50% {
+    margin-top: 35px;
+}
+100% {
+    margin-top: 25px;
+}
+}
+.Logo {
+    border-radius: 100%;
+    cursor: pointer;
+    border: solid 3px rgb(65, 6, 151);
+    box-shadow: 0px 0px 40px 4px rgb(65, 6, 151);
+    height: 90px;
+    width: 90px;
+    position: fixed;
+    top: 4%;
+    left: 3%;
+}
+.WelcomeTxt {
+    /*background-color: blue;*/
+    width: 100%;
+    height: 60%;
+    margin-top: 10%;
+    font-size: 18px;
+}
+.inputBlock {
+  /*  background-color: red;*/
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+.inputBlock input {
+    width: 100%;
+    height: 25px;
+    margin-top: -10px;
+    border-radius: 6px;
+    border: solid 3px rgb(65, 6, 151);
+    box-shadow: 0px 0px 40px 4px rgb(65, 6, 151);
+}
+.registerBlock {
+   /* background-color: blue;*/
+    display: grid;
+    justify-content: center;
+}
+.btn {
+    background-color: none;
+    display: grid;
+    cursor: pointer;
+    transition: all 0.4s;
+    width: 180px;
+    height: 60px;
+    font-size: 22px;
+    align-items: center;
+    font-family: "Pixelify Sans", sans-serif;
+    border-radius: 30px;
+    border: solid 3px rgb(65, 6, 151);
+    box-shadow: 0px 0px 40px 4px rgb(65, 6, 151);
+}
+#Registerbtn {
+    margin-left: 6px;
+    height: 55px;
+    width: 160px;
+}
+.btn:hover {
+    color: rgb(65, 6, 151);
+}
+#LoginBtn:hover {
+    background-color: rgb(0, 0, 0);
+    width: 182px;
+    height: 62px;
+}
+h2 {
+    width: 250px;
+    margin-top: 100px;
+    font-size: 24px;
+    align-items: center;
+    transition: all 300ms;
+}
+h2:hover {
+    font-size: 26px;
+    width: 270px;
+    align-items: center;
+}
+
+@media (max-width:1300px) {
+    h2 {
+       /* color: blue;*/
+    }
+}
+/* Media query para ajustar o player quando os cards quebram linha */
+@media (max-width: 1024px) {
+    h2 {
+       /* color: red;*/
+    }
+}
+@media (max-width: 868px) {
+    h2{
+        /*color: blue;*/
+        width: 200px;
+    }
+    h2:hover {
+    font-size: 26px;
+    width: 202px;
+    align-items: center;
+}
+}
+
+@media (max-width: 695px) {
+    h2{
+       /* color: red;*/
+        width: 150px;
+    }
+    h2:hover {
+    font-size: 26px;
+    width: 152px;
+    align-items: center;
+}
+    .WelcomeTxt {
+        margin-left: 15%;
+        font-size: 12px;
+        width: 300px;
+    }
+}

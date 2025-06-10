@@ -339,7 +339,7 @@ musicInput.addEventListener('change', function() {
             currentPlayingH2 = this; // Atualiza o H2 que está tocando
             musicNameDisplay.textContent = file.name; // Atualiza o nome da música no player (Mudado para musicNameDisplay)
             // atualiza o botão de pausa
-            pauseBtn.src = './icons/pause.png';
+            pauseBtn.src = '../icons/pause.png';
 
             // ADICIONA O EVENTO 'ENDED' AQUI (Adicionado de codigo2)
             currentAudio.addEventListener('ended', playNextSong);
@@ -355,11 +355,11 @@ pauseBtn.addEventListener('click', function() {
         if (isPlaying) {
             currentAudio.pause();
             isPlaying = false;
-            pauseBtn.src = './icons/play.png';
+            pauseBtn.src = '../icons/play.png';
         } else {
             currentAudio.play();
             isPlaying = true;
-            pauseBtn.src = './icons/pause.png';
+            pauseBtn.src = '../icons/pause.png';
         }
     }
 });
