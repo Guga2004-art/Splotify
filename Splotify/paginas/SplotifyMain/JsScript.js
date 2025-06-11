@@ -37,6 +37,120 @@ const purpleBtnElement = document.querySelector('#purpleBtn')
 const sideItens = document.querySelector('.sideItens') // Adicionado de codigo1
 const MatrixOnly = document.getElementById("matrixOnly")
 
+// --- INÍCIO DA IMPLEMENTAÇÃO DO INDEXEDDB PARA ARMAZENAMENTO PERSISTENTE DE MÚSICAS ---
+// NOTA: O JavaScript do navegador não pode criar pastas diretamente no sistema de arquivos do usuário
+// por razões de segurança. Em vez disso, usamos o IndexedDB, um banco de dados do navegador,
+// para atingir o objetivo de salvar músicas de forma persistente. Isso funciona como a pasta "ALLSONGS" que você queria.
+let db;
+
+function initDB() {
+    const request = window.indexedDB.open("SplotifyDB", 1);
+
+    request.onerror = function(event) {
+        console.error("Erro no banco de dados: " + event.target.errorCode);
+    };
+
+    request.onsuccess = function(event) {
+        db = event.target.result;
+        console.log("Banco de dados aberto com sucesso.");
+        loadSongs(); // Carrega as músicas assim que o DB estiver pronto
+    };
+
+    request.onupgradeneeded = function(event) {
+        let db = event.target.result;
+        // O object store irá guardar os próprios objetos File.
+        // Usamos o nome do arquivo como a chave (keyPath).
+        if (!db.objectStoreNames.contains('songs')) {
+            db.createObjectStore('songs', { keyPath: 'name' });
+        }
+    };
+}
+
+function saveSong(file) {
+    if (!db) {
+        console.error("O banco de dados não está inicializado.");
+        return;
+    }
+    const transaction = db.transaction(['songs'], 'readwrite');
+    const store = transaction.objectStore('songs');
+    const request = store.put(file); // 'put' adiciona ou atualiza se a chave já existir
+
+    request.onsuccess = function() {
+        console.log(`Música "${file.name}" salva no IndexedDB.`);
+    };
+
+    request.onerror = function(event) {
+        console.error(`Erro ao salvar a música "${file.name}": ${event.target.error}`);
+    };
+}
+
+function loadSongs() {
+    if (!db) {
+        console.error("O banco de dados não está inicializado.");
+        return;
+    }
+    const transaction = db.transaction(['songs'], 'readonly');
+    const store = transaction.objectStore('songs');
+    const getAllRequest = store.getAll();
+
+    getAllRequest.onsuccess = function(event) {
+        const files = event.target.result;
+        files.forEach(file => {
+            addSongToUI(file);
+        });
+        console.log(`${files.length} música(s) carregada(s) do IndexedDB.`);
+    };
+
+    getAllRequest.onerror = function(event) {
+        console.error("Erro ao carregar músicas: " + event.target.error);
+    };
+}
+
+// NOVA FUNÇÃO para limpar todas as músicas do IndexedDB
+function clearSongsDB() {
+    if (!db) {
+        console.error("O banco de dados não está inicializado para limpeza.");
+        return;
+    }
+    const transaction = db.transaction(['songs'], 'readwrite');
+    const store = transaction.objectStore('songs');
+    const request = store.clear();
+
+    request.onsuccess = function() {
+        console.log("Todas as músicas foram removidas do IndexedDB.");
+    };
+
+    request.onerror = function(event) {
+        console.error("Erro ao limpar o banco de dados de músicas: ", event.target.error);
+    };
+}
+
+function addSongToUI(file) {
+    const musicsDiv = document.querySelector('.musics');
+    const h2 = document.createElement('h2');
+    h2.textContent = file.name;
+    h2.classList.add('btn');
+    musicsDiv.appendChild(h2);
+    musicMap.set(h2, file);
+
+    // adiciona click em cada item de musica
+    h2.addEventListener('click', function() {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.removeEventListener('ended', playNextSong);
+        }
+        currentAudio = new Audio(URL.createObjectURL(file));
+        currentAudio.play();
+        isPlaying = true;
+        currentPlayingH2 = this;
+        musicNameDisplay.textContent = file.name;
+        pauseBtn.src = '../icons/pause.png';
+        currentAudio.addEventListener('ended', playNextSong);
+    });
+}
+// --- FIM DA IMPLEMENTAÇÃO DO INDEXEDDB ---
+
+
 // Variáveis para os novos botões e elementos de imagem
 const changeLogoBtn = document.getElementById('changeLogoBtn');
 const changeProfileBtn = document.getElementById('changeProfileBtn');
@@ -94,92 +208,106 @@ styleSheet.innerHTML = `
 `;
 document.head.appendChild(styleSheet);
 
-//color changes neon
+// --- LÓGICA DE PERSISTÊNCIA E APLICAÇÃO DE TEMA ---
+
+// Define as paletas de cores para facilitar a troca
+const colorThemes = {
+    purple: {
+        main: 'rgb(38, 6, 151)',
+        glow: 'rgb(38, 6, 221)',
+        titleBg: 'rgb(92, 35, 138)',
+        matrix: 'rgb(72, 50, 155)'
+    },
+    red: {
+        main: 'red',
+        glow: 'rgb(211, 38, 6)',
+        titleBg: 'rgba(128, 0, 0, 0.7)',
+        matrix: 'red'
+    },
+    green: {
+        main: 'green',
+        glow: 'rgb(38, 151, 6)',
+        titleBg: 'rgba(0, 128, 0, 0.7)',
+        matrix: 'green'
+    }
+};
+
+// Função refatorada que aplica um tema com base no nome da cor
+function applyTheme(colorName) {
+    const theme = colorThemes[colorName];
+    if (!theme) return; // Se o nome da cor for inválido, não faz nada
+
+    // Aplica os estilos a todos os elementos
+    profilePicture.style.border = `solid 2px ${theme.main}`;
+    navBar.style.border = `solid 3px ${theme.main}`;
+    templateBlock.style.border = `solid 2px ${theme.main}`;
+    contentPlayer.style.border = `solid 2px ${theme.main}`;
+    logo.style.border = `solid 2px ${theme.main}`;
+    randomContent.style.border = `solid 2px ${theme.main}`;
+    musicNameDisplay.style.border = `solid 2px ${theme.main}`;
+    cardsTemplate.forEach(card => card.style.border = `solid 2px ${theme.main}`);
+    tittleCard.forEach(card => {
+        card.style.border = `solid 2px ${theme.main}`;
+        card.style.backgroundColor = theme.titleBg;
+    });
+    sinopse.forEach(card => card.style.border = `solid 2px ${theme.main}`);
+    cardImg.forEach(img => img.style.border = `solid 2px ${theme.main}`);
+    btnAdd.forEach(btn => {
+        btn.style.border = `solid 1px ${theme.main}`;
+        btn.style.boxShadow = `-15px -10px 50px 2px ${theme.main}`;
+    });
+    addBtn.style.border = `solid 2px ${theme.main}`;
+    addBtn.style.boxShadow = `0px 0px 70px 8px ${theme.main}`;
+    purpleBtnElement.style.border = colorName === 'purple' ? `solid 3px ${theme.main}` : 'none'; // Estilo especial para o botão roxo
+    
+    // Aplica as sombras com a cor de 'brilho' apropriada
+    purpleBtnElement.style.boxShadow = `0px 0px 40px 5px ${colorThemes.purple.glow}`; // Mantem o brilho de cada botão de cor
+    redBtn.style.boxShadow = `0px 0px 40px 5px ${colorThemes.red.glow}`;
+    greenBtn.style.boxShadow = `0px 0px 40px 5px ${colorThemes.green.glow}`;
+    navBar.style.boxShadow = `5px 10px 50px 2px ${theme.main}`;
+    profilePicture.style.boxShadow = `0px 0px 50px 2px ${theme.main}`;
+    templateBlock.style.boxShadow = `0px 0px 50px 2px ${theme.main}`;
+    contentPlayer.style.boxShadow = `0px 0px 70px 10px ${theme.main}`;
+    randomContent.style.boxShadow = `-15px -10px 50px 2px ${theme.main}`;
+    musicNameDisplay.style.boxShadow = `-15px -10px 50px 2px ${theme.main}`;
+    cardsTemplate.forEach(card => card.style.boxShadow = `0px 6px 50px 2px ${theme.main}`);
+    tittleCard.forEach(card => card.style.boxShadow = `-15px -10px 50px 2px ${theme.main}`);
+    sinopse.forEach(card => card.style.boxShadow = `5px 0px 30px 6px ${theme.main}`);
+    logo.style.boxShadow = `-7px 3px 85px 0px ${theme.main}`;
+
+    // Atualiza os estilos de hover e a cor da Matrix
+    updateTemplateBlockHover(colorName);
+    updateBtnHover(colorName);
+    matrixColor = theme.matrix;
+}
+
+// Event Listeners para os botões de cor
+// Agora eles chamam a função applyTheme e salvam a escolha no localStorage
 greenBtn.addEventListener("click", function() {
-    profilePicture.style.border = "solid 2px green"
-    navBar.style.border = "solid 3px green"
-    templateBlock.style.border = "solid 2px green"
-    contentPlayer.style.border = "solid 2px green"
-    logo.style.border = "solid 2px green"
-    randomContent.style.border = "solid 2px green"
-    musicNameDisplay.style.border = "solid 2px green" // Use musicNameDisplay
-    cardsTemplate.forEach(card => card.style.border = "solid 2px green")
-    tittleCard.forEach(card => { card.style.border = "solid 2px green"; card.style.backgroundColor = "rgba(0, 128, 0, 0.7)"; })
-    sinopse.forEach(card => card.style.border = "solid 2px green")
-    cardImg.forEach(img => img.style.border = "solid 2px green")
-    btnAdd.forEach(btn => { btn.style.border = "solid 1px green"; btn.style.boxShadow = "-15px -10px 50px 2px green"; })
-    addBtn.style.border = "solid 2px green"; addBtn.style.boxShadow = "0px 0px 70px 8px green"
-    navBar.style.boxShadow = "5px 10px 50px 2px green"
-    profilePicture.style.boxShadow = "0px 0px 50px 2px green"
-    templateBlock.style.boxShadow = "0px 0px 50px 2px green"
-    contentPlayer.style.boxShadow = "0px 0px 70px 10px green"
-    randomContent.style.boxShadow = "-15px -10px 50px 2px green"
-    musicNameDisplay.style.boxShadow = "-15px -10px 50px 2px green" // Use musicNameDisplay
-    cardsTemplate.forEach(card => card.style.boxShadow = "0px 6px 50px 2px green")
-    tittleCard.forEach(card => card.style.boxShadow = "-15px -10px 50px 2px green")
-    sinopse.forEach(card => card.style.boxShadow = "5px 0px 30px 6px green")
-    logo.style.boxShadow = "-7px 3px 85px 0px green"
-    updateTemplateBlockHover("green")
-    updateBtnHover("green")
-    matrixColor = "green"; // Muda a cor do Matrix para verde
-})
+    applyTheme('green');
+    localStorage.setItem('splotifyTheme', 'green');
+});
+
 redBtn.addEventListener("click", function() {
-    profilePicture.style.border = "solid 2px red"
-    navBar.style.border = "solid 3px red"
-    templateBlock.style.border = "solid 2px red"
-    contentPlayer.style.border = "solid 2px red"
-    logo.style.border = "solid 2px red"
-    randomContent.style.border = "solid 2px red"
-    musicNameDisplay.style.border = "solid 2px red" // Use musicNameDisplay
-    cardsTemplate.forEach(card => card.style.border = "solid 2px red")
-    tittleCard.forEach(card => { card.style.border = "solid 2px red"; card.style.backgroundColor = "rgba(128, 0, 0, 0.7)"; })
-    sinopse.forEach(card => card.style.border = "solid 2px red")
-    cardImg.forEach(img => img.style.border = "solid 2px red")
-    btnAdd.forEach(btn => { btn.style.border = "solid 1px red"; btn.style.boxShadow = "-15px -10px 50px 2px red"; })
-    addBtn.style.border = "solid 2px red"; addBtn.style.boxShadow = "0px 0px 70px 8px red"
-    navBar.style.boxShadow = "5px 10px 50px 2px red"
-    profilePicture.style.boxShadow = "0px 0px 50px 2px red"
-    templateBlock.style.boxShadow = "0px 0px 50px 2px red"
-    contentPlayer.style.boxShadow = "0px 0px 70px 10px red"
-    randomContent.style.boxShadow = "-15px -10px 50px 2px red"
-    musicNameDisplay.style.boxShadow = "-15px -10px 50px 2px red" // Use musicNameDisplay
-    cardsTemplate.forEach(card => card.style.boxShadow = "0px 6px 50px 2px red")
-    tittleCard.forEach(card => card.style.boxShadow = "-15px -10px 50px 2px red")
-    sinopse.forEach(card => card.style.boxShadow = "5px 0px 30px 6px red")
-    logo.style.boxShadow = "-7px 3px 85px 0px red"
-    updateTemplateBlockHover("red")
-    updateBtnHover("red")
-    matrixColor = "red"; // Muda a cor do Matrix para vermelho
-})
+    applyTheme('red');
+    localStorage.setItem('splotifyTheme', 'red');
+});
+
 purpleBtn.addEventListener("click", function() {
-    profilePicture.style.border = "solid 2px rgb(38, 6, 151)"
-    navBar.style.border = "solid 3px rgb(38, 6, 151)"   
-    templateBlock.style.border = "solid 2px rgb(38, 6, 151)"
-    contentPlayer.style.border = "solid 2px rgb(38, 6, 151)"
-    logo.style.border = "solid 2px rgb(38, 6, 151)"
-    randomContent.style.border = "solid 2px rgb(38, 6, 151)"
-    musicNameDisplay.style.border = "solid 2px rgb(38, 6, 151)" // Use musicNameDisplay
-    cardsTemplate.forEach(card => card.style.border = "solid 2px rgb(38, 6, 151)")
-    tittleCard.forEach(card => { card.style.border = "solid 2px rgb(38, 6, 151)"; card.style.backgroundColor = "rgb(92, 35, 138)"; })
-    sinopse.forEach(card => card.style.border = "solid 2px rgb(38, 6, 151)")
-    cardImg.forEach(img => img.style.border = "solid 2px rgb(38, 6, 151)")
-    btnAdd.forEach(btn => { btn.style.border = "solid 1px rgb(38, 6, 151)"; btn.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)"; })
-    addBtn.style.border = "solid 2px rgb(38, 6, 151)"; addBtn.style.boxShadow = "0px 0px 70px 8px rgb(38, 6, 151)"
-    purpleBtnElement.style.border = "solid 3px rgb(38, 6, 151)"; purpleBtnElement.style.boxShadow = "0px 0px 40px 5px rgb(38, 6, 221)"
-    navBar.style.boxShadow = "5px 10px 50px 2px rgb(38, 6, 151)"
-    profilePicture.style.boxShadow = "0px 0px 50px 2px rgb(38, 6, 151)"
-    templateBlock.style.boxShadow = "0px 0px 50px 2px rgb(38, 6, 151)"
-    contentPlayer.style.boxShadow = "0px 0px 70px 10px rgb(38, 6, 151)"
-    randomContent.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)"
-    musicNameDisplay.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)" // Use musicNameDisplay
-    cardsTemplate.forEach(card => card.style.boxShadow = "0px 6px 50px 2px rgb(38, 6, 151)")
-    tittleCard.forEach(card => card.style.boxShadow = "-15px -10px 50px 2px rgb(38, 6, 151)")
-    sinopse.forEach(card => card.style.boxShadow = "5px 0px 30px 6px rgb(38, 6, 151)")
-    logo.style.boxShadow = "-7px 3px 85px 0px rgb(38, 6, 151)"
-    updateTemplateBlockHover("purple")
-    updateBtnHover("purple")
-    matrixColor = "rgb(72, 50, 155)"; // Restaura a cor do Matrix para roxo
-})
+    applyTheme('purple');
+    localStorage.setItem('splotifyTheme', 'purple');
+});
+
+// Função para carregar e aplicar o tema salvo ao iniciar a página
+function loadAndApplyTheme() {
+    const savedTheme = localStorage.getItem('splotifyTheme');
+    if (savedTheme) { // Se um tema foi salvo
+        applyTheme(savedTheme);
+    } else {
+        applyTheme('purple'); // Aplica o tema roxo por padrão se nada for salvo
+    }
+}
+// --- FIM DA LÓGICA DE TEMA ---
 
 closeConfig.addEventListener("click", function() {
     configBlock.style.display = "none"
@@ -318,34 +446,21 @@ function playNextSong() {
 // Lida com a seleção de arquivos de música
 musicInput.addEventListener('change', function() {
     const files = this.files;
-    const musicsDiv = document.querySelector('.musics'); // Div onde as músicas aparecem
-    for (let file of files) {
-        const h2 = document.createElement('h2');
-        h2.textContent = file.name; // Nome do arquivo como texto
-        h2.classList.add('btn'); // Adiciona uma classe para estilização, se necessário
-        musicsDiv.appendChild(h2); // Adiciona o elemento à div
-        musicMap.set(h2, file);
+    for (const file of files) {
+        // Verifica se a música já existe na UI para não adicionar duplicatas
+        const existingElements = document.querySelectorAll('.musics h2.btn');
+        const alreadyExists = Array.from(existingElements).some(el => el.textContent === file.name);
         
-        // adiciona click em cada item de musica
-        h2.addEventListener('click', function() {
-            if (currentAudio) {
-                currentAudio.pause();
-                // Remove o listener 'ended' da música anterior para evitar chamadas duplicadas (Adicionado de codigo2)
-                currentAudio.removeEventListener('ended', playNextSong); 
-            }
-            currentAudio = new Audio(URL.createObjectURL(file));
-            currentAudio.play();
-            isPlaying = true;
-            currentPlayingH2 = this; // Atualiza o H2 que está tocando
-            musicNameDisplay.textContent = file.name; // Atualiza o nome da música no player (Mudado para musicNameDisplay)
-            // atualiza o botão de pausa
-            pauseBtn.src = '../icons/pause.png';
-
-            // ADICIONA O EVENTO 'ENDED' AQUI (Adicionado de codigo2)
-            currentAudio.addEventListener('ended', playNextSong);
-        });
+        if (!alreadyExists) {
+            addSongToUI(file); // Adiciona na interface e torna tocável
+            saveSong(file);   // Salva no banco de dados para persistência
+        } else {
+            console.warn(`A música "${file.name}" já está na playlist.`);
+        }
     }
+    this.value = ''; // Limpa o valor do input para permitir selecionar o mesmo arquivo novamente
 });
+
 
 pauseBtn.addEventListener('click', function() {
         navBar.style.display =  "flex"
@@ -454,3 +569,44 @@ profilePictureInput.addEventListener('change', function() {
         profilePictureImg.src = URL.createObjectURL(file); // Define a nova imagem do perfil
     }
 });
+
+
+// --- LÓGICA PARA LIMPAR TODAS AS MÚSICAS AO CLICAR NA SINOPSE DO PRIMEIRO CARD ---
+const firstCardSinopseBox = document.querySelector('.cardsTemplate .sinopseBox');
+const firstCardSinopseText = document.querySelector('.cardsTemplate .sinopse');
+
+if (firstCardSinopseBox && firstCardSinopseText) {
+    // Atualiza o texto para indicar a nova funcionalidade
+    firstCardSinopseText.textContent = "Delete_All_Songs";
+
+    firstCardSinopseBox.addEventListener('click', function() {
+        // Pede confirmação para evitar cliques acidentais
+        if (confirm("Are you sure you want to delete all added songs?")) {
+            // 1. Parar a música atual e resetar o player
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            isPlaying = false;
+            currentPlayingH2 = null;
+            musicNameDisplay.textContent = 'Null';
+            pauseBtn.src = '../icons/play.png';
+
+            // 2. Limpar os elementos de música (h2) da UI, exceto os templates
+            const songElements = document.querySelectorAll('.musics h2.btn:not(#templateMusic1)');
+            songElements.forEach(el => el.remove());
+
+            // 3. Limpar o Map de músicas em memória
+            musicMap.clear();
+
+            // 4. Limpar o IndexedDB
+            clearSongsDB();
+
+            alert("All songs have been cleared.");
+        }
+    });
+}
+
+// INICIALIZAÇÃO DA PÁGINA
+loadAndApplyTheme(); // Carrega o tema salvo
+initDB(); // Inicia o banco de dados para as músicas

@@ -10,6 +10,79 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    background-image: url("./paginas/images/BackgroundPurple.jpg");
+}
+/* --- ESTILOS BASE (mantidos quase intactos) --- */
+.meteor1 {
+    z-index: 0;
+    position: absolute;
+    /* Posição inicial fora da tela */
+    top: -100px;
+    right: 200px;
+    height: 20px;
+    width: 450px;
+    rotate: -35deg;
+    filter: blur(6px);
+    /* ANIMAÇÃO MELHORADA */
+    animation: fall 7.3s linear infinite;
+    /* Delay para não começar junto com o outro */
+    animation-delay: -2s;
+}
+
+.meteor2 {
+    z-index: 0;
+    position: absolute;
+    /* Posição inicial diferente e mais distante */
+    top: -50px;
+    right: -300px;
+    height: 10px;
+    width: 850px;
+    rotate: -49deg;
+    filter: blur(12px);
+    /* ANIMAÇÃO MELHORADA */
+    animation: fall 4.5s linear infinite;
+    /* Delay para criar um efeito mais natural */
+    animation-delay: -7s;
+}
+
+.meteor3 {
+    z-index: 0;
+    position: absolute;
+    /* Posição inicial diferente e mais distante */
+    top: -50px;
+    right: -500px;
+    height: 4px;
+    width: 850px;
+    rotate: -42deg;
+    filter: blur(12px);
+    /* ANIMAÇÃO MELHORADA */
+    animation: fall 9.5s linear infinite;
+    /* Delay para criar um efeito mais natural */
+    animation-delay: -1s;
+}
+
+/* --- KEYFRAME ÚNICO E MAIS EFICIENTE --- */
+@keyframes fall {
+    0% {
+        /* Começa invisível e um pouco menor */
+        opacity: 0;
+        transform: translate(0, 0) scale(0.8);
+    }
+    10% {
+        /* Aparece rapidamente */
+        opacity: 1;
+    }
+    100% {
+        /* 
+         *  Move para uma distância longa na diagonal e desaparece.
+         *  Usamos 'vw' (largura da tela) e 'vh' (altura da tela)
+         *  para que funcione bem em qualquer tamanho de monitor.
+        */
+        opacity: 0;
+        transform: translate(-150vw, 150vh) scale(1.2);
+    }
 }
 a {
     text-decoration: none;
@@ -17,6 +90,7 @@ a {
     cursor: pointer;
 }
 .boxLogin {
+    z-index: 1;
     margin-top: 20px;
     display: grid;
     justify-content: center;
@@ -49,6 +123,11 @@ a {
     position: fixed;
     top: 4%;
     left: 3%;
+}
+.Logo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
 }
 .WelcomeTxt {
     /*background-color: blue;*/
